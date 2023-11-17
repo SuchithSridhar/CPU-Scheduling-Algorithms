@@ -1,0 +1,458 @@
+FCFS:
+T1	14	19
+T2	40	51
+T3	51	60
+T4	60	68
+T5	92	108
+T6	114	118
+T7	144	154
+T8	154	168
+T9	182	186
+T10	216	235
+T11	235	241
+T12	244	265
+T13	265	273
+T14	289	298
+T15	300	322
+T16	322	340
+T17	340	342
+T18	350	371
+T19	371	383
+T20	390	406
+T21	406	430
+T22	430	451
+T23	451	455
+T24	474	487
+T25	487	506
+T26	506	530
+T27	530	537
+T28	545	560
+T29	560	576
+T30	576	599
+T31	599	602
+T32	602	605
+T33	605	620
+T34	620	644
+T35	644	647
+T36	666	668
+T37	675	679
+T38	679	688
+T39	705	718
+T40	725	749
+T41	757	761
+T42	761	780
+T43	780	802
+T44	802	810
+T45	810	832
+T46	832	854
+T47	854	859
+T48	877	890
+T49	912	926
+T50	931	949
+Waiting Time T1: 0
+Waiting Time T2: 0
+Waiting Time T3: 0
+Waiting Time T4: 7
+Waiting Time T5: 0
+Waiting Time T6: 0
+Waiting Time T7: 0
+Waiting Time T8: 7
+Waiting Time T9: 0
+Waiting Time T10: 0
+Waiting Time T11: 7
+Waiting Time T12: 0
+Waiting Time T13: 1
+Waiting Time T14: 0
+Waiting Time T15: 0
+Waiting Time T16: 11
+Waiting Time T17: 18
+Waiting Time T18: 0
+Waiting Time T19: 12
+Waiting Time T20: 0
+Waiting Time T21: 10
+Waiting Time T22: 14
+Waiting Time T23: 12
+Waiting Time T24: 0
+Waiting Time T25: 0
+Waiting Time T26: 10
+Waiting Time T27: 16
+Waiting Time T28: 0
+Waiting Time T29: 11
+Waiting Time T30: 10
+Waiting Time T31: 27
+Waiting Time T32: 29
+Waiting Time T33: 29
+Waiting Time T34: 10
+Waiting Time T35: 6
+Waiting Time T36: 0
+Waiting Time T37: 0
+Waiting Time T38: 1
+Waiting Time T39: 0
+Waiting Time T40: 0
+Waiting Time T41: 0
+Waiting Time T42: 2
+Waiting Time T43: 12
+Waiting Time T44: 21
+Waiting Time T45: 27
+Waiting Time T46: 17
+Waiting Time T47: 17
+Waiting Time T48: 0
+Waiting Time T49: 0
+Waiting Time T50: 0
+Average Waiting Time: 6.88
+
+RR:
+T1	14	19
+T2	40	51
+T3	51	55
+T4	55	59
+T3	59	63
+T4	63	67
+T3	67	68
+T5	92	108
+T6	114	118
+T7	144	148
+T8	148	152
+T7	152	156
+T8	156	160
+T7	160	162
+T8	162	168
+T9	182	186
+T10	216	235
+T11	235	241
+T12	244	265
+T13	265	273
+T14	289	298
+T15	300	322
+T16	322	326
+T17	326	328
+T16	328	342
+T18	350	371
+T19	371	383
+T20	390	406
+T21	406	430
+T22	430	451
+T23	451	455
+T24	474	487
+T25	487	506
+T26	506	530
+T27	530	537
+T28	545	549
+T29	549	553
+T28	553	557
+T29	557	561
+T28	561	565
+T29	565	569
+T28	569	572
+T30	572	576
+T29	576	580
+T31	580	583
+T32	583	586
+T33	586	590
+T30	590	594
+T33	594	598
+T30	598	602
+T33	602	606
+T30	606	610
+T33	610	613
+T34	613	617
+T30	617	621
+T34	621	625
+T30	625	628
+T34	628	644
+T35	644	647
+T36	666	668
+T37	675	679
+T38	679	688
+T39	705	718
+T40	725	749
+T41	757	761
+T42	761	780
+T43	780	784
+T44	784	788
+T45	788	792
+T43	792	796
+T44	796	800
+T45	800	804
+T43	804	808
+T45	808	812
+T43	812	816
+T45	816	820
+T46	820	824
+T43	824	828
+T45	828	832
+T46	832	836
+T43	836	838
+T45	838	840
+T46	840	844
+T47	844	848
+T46	848	852
+T47	852	853
+T46	853	859
+T48	877	890
+T49	912	926
+T50	931	949
+Waiting Time T1: 0
+Waiting Time T2: 0
+Waiting Time T3: 8
+Waiting Time T4: 6
+Waiting Time T5: 0
+Waiting Time T6: 0
+Waiting Time T7: 8
+Waiting Time T8: 7
+Waiting Time T9: 0
+Waiting Time T10: 0
+Waiting Time T11: 7
+Waiting Time T12: 0
+Waiting Time T13: 1
+Waiting Time T14: 0
+Waiting Time T15: 0
+Waiting Time T16: 13
+Waiting Time T17: 4
+Waiting Time T18: 0
+Waiting Time T19: 12
+Waiting Time T20: 0
+Waiting Time T21: 10
+Waiting Time T22: 14
+Waiting Time T23: 12
+Waiting Time T24: 0
+Waiting Time T25: 0
+Waiting Time T26: 10
+Waiting Time T27: 16
+Waiting Time T28: 12
+Waiting Time T29: 15
+Waiting Time T30: 39
+Waiting Time T31: 8
+Waiting Time T32: 10
+Waiting Time T33: 22
+Waiting Time T34: 10
+Waiting Time T35: 6
+Waiting Time T36: 0
+Waiting Time T37: 0
+Waiting Time T38: 1
+Waiting Time T39: 0
+Waiting Time T40: 0
+Waiting Time T41: 0
+Waiting Time T42: 2
+Waiting Time T43: 48
+Waiting Time T44: 11
+Waiting Time T45: 35
+Waiting Time T46: 22
+Waiting Time T47: 11
+Waiting Time T48: 0
+Waiting Time T49: 0
+Waiting Time T50: 0
+Average Waiting Time: 7.60
+
+NSJF:
+T1	14	19
+T2	40	51
+T3	51	60
+T4	60	68
+T5	92	108
+T6	114	118
+T7	144	154
+T8	154	168
+T9	182	186
+T10	216	235
+T11	235	241
+T12	244	265
+T13	265	273
+T14	289	298
+T15	300	322
+T17	322	324
+T16	324	342
+T18	350	371
+T19	371	383
+T20	390	406
+T21	406	430
+T22	430	451
+T23	451	455
+T24	474	487
+T25	487	506
+T26	506	530
+T27	530	537
+T28	545	560
+T29	560	576
+T31	576	579
+T32	579	582
+T33	582	597
+T30	597	620
+T34	620	644
+T35	644	647
+T36	666	668
+T37	675	679
+T38	679	688
+T39	705	718
+T40	725	749
+T41	757	761
+T42	761	780
+T43	780	802
+T44	802	810
+T45	810	832
+T46	832	854
+T47	854	859
+T48	877	890
+T49	912	926
+T50	931	949
+Waiting Time T1: 0
+Waiting Time T2: 0
+Waiting Time T3: 0
+Waiting Time T4: 7
+Waiting Time T5: 0
+Waiting Time T6: 0
+Waiting Time T7: 0
+Waiting Time T8: 7
+Waiting Time T9: 0
+Waiting Time T10: 0
+Waiting Time T11: 7
+Waiting Time T12: 0
+Waiting Time T13: 1
+Waiting Time T14: 0
+Waiting Time T15: 0
+Waiting Time T16: 13
+Waiting Time T17: 0
+Waiting Time T18: 0
+Waiting Time T19: 12
+Waiting Time T20: 0
+Waiting Time T21: 10
+Waiting Time T22: 14
+Waiting Time T23: 12
+Waiting Time T24: 0
+Waiting Time T25: 0
+Waiting Time T26: 10
+Waiting Time T27: 16
+Waiting Time T28: 0
+Waiting Time T29: 11
+Waiting Time T30: 31
+Waiting Time T31: 4
+Waiting Time T32: 6
+Waiting Time T33: 6
+Waiting Time T34: 10
+Waiting Time T35: 6
+Waiting Time T36: 0
+Waiting Time T37: 0
+Waiting Time T38: 1
+Waiting Time T39: 0
+Waiting Time T40: 0
+Waiting Time T41: 0
+Waiting Time T42: 2
+Waiting Time T43: 12
+Waiting Time T44: 21
+Waiting Time T45: 27
+Waiting Time T46: 17
+Waiting Time T47: 17
+Waiting Time T48: 0
+Waiting Time T49: 0
+Waiting Time T50: 0
+Average Waiting Time: 5.60
+
+PSJF:
+T1	14	19
+T2	40	51
+T3	51	60
+T4	60	68
+T5	92	108
+T6	114	118
+T7	144	154
+T8	154	168
+T9	182	186
+T10	216	228
+T11	228	234
+T10	234	241
+T12	244	265
+T13	265	273
+T14	289	298
+T15	300	322
+T17	322	324
+T16	324	342
+T18	350	371
+T19	371	383
+T20	390	406
+T21	406	430
+T22	430	439
+T23	439	443
+T22	443	455
+T24	474	487
+T25	487	506
+T26	506	514
+T27	514	521
+T26	521	537
+T28	545	560
+T29	560	572
+T31	572	575
+T32	575	578
+T29	578	582
+T33	582	597
+T30	597	620
+T34	620	638
+T35	638	641
+T34	641	647
+T36	666	668
+T37	675	679
+T38	679	688
+T39	705	718
+T40	725	749
+T41	757	761
+T42	761	780
+T43	780	781
+T44	781	789
+T43	789	810
+T45	810	832
+T46	832	837
+T47	837	842
+T46	842	859
+T48	877	890
+T49	912	926
+T50	931	949
+Waiting Time T1: 0
+Waiting Time T2: 0
+Waiting Time T3: 0
+Waiting Time T4: 7
+Waiting Time T5: 0
+Waiting Time T6: 0
+Waiting Time T7: 0
+Waiting Time T8: 7
+Waiting Time T9: 0
+Waiting Time T10: 6
+Waiting Time T11: 0
+Waiting Time T12: 0
+Waiting Time T13: 1
+Waiting Time T14: 0
+Waiting Time T15: 0
+Waiting Time T16: 13
+Waiting Time T17: 0
+Waiting Time T18: 0
+Waiting Time T19: 12
+Waiting Time T20: 0
+Waiting Time T21: 10
+Waiting Time T22: 18
+Waiting Time T23: 0
+Waiting Time T24: 0
+Waiting Time T25: 0
+Waiting Time T26: 17
+Waiting Time T27: 0
+Waiting Time T28: 0
+Waiting Time T29: 17
+Waiting Time T30: 31
+Waiting Time T31: 0
+Waiting Time T32: 2
+Waiting Time T33: 6
+Waiting Time T34: 13
+Waiting Time T35: 0
+Waiting Time T36: 0
+Waiting Time T37: 0
+Waiting Time T38: 1
+Waiting Time T39: 0
+Waiting Time T40: 0
+Waiting Time T41: 0
+Waiting Time T42: 2
+Waiting Time T43: 20
+Waiting Time T44: 0
+Waiting Time T45: 27
+Waiting Time T46: 22
+Waiting Time T47: 0
+Waiting Time T48: 0
+Waiting Time T49: 0
+Waiting Time T50: 0
+Average Waiting Time: 4.64
