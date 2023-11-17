@@ -10,6 +10,9 @@ bool task_init(Task *task, char *taskname, long arrival, long burst) {
     task->taskname = strdup(taskname);
     task->arrival = arrival;
     task->burst = burst;
+    task->remaining_burst = burst;
+    task->last_execution = 0;
+    task->wait_time = 0;
 
     return true;
 }
@@ -49,15 +52,31 @@ void tasklist_destory(TaskList *list) {
     ssv_destroy(list);
 }
 
-bool tasklist_push(TaskList *list, Task *task) {
+size_t tasklist_size(TaskList *list) {
+    if (list) return list->size;
+    return 0;
+}
+
+bool tasklist_empty(TaskList *list) {
+    if (list) return list->size == 0;
+    return true;
+}
+
+bool tasklist_push(TaskList *list, Task *task, bool copy) {
     if (!list || !task) return false;
 
-    Task *t_copy = task_create(task->taskname, task->arrival, task->burst);
-    if (!t_copy) return false;
+    Task *t;
 
-    bool success = ssv_push(list, &t_copy);
+    if (copy) {
+        t = task_create(task->taskname, task->arrival, task->burst);
+        if (!t) return false;
+    } else {
+        t = task;
+    }
+
+    bool success = ssv_push(list, &t);
     if (!success) {
-        task_destroy(t_copy);
+        task_destroy(t);
         return false;
     }
 
@@ -98,6 +117,16 @@ bool tasklist_delete_at(TaskList *list, size_t index) {
     task_destroy(*task_ptr);
 
     return true;
+}
+
+Task* tasklist_pop_at(TaskList *list, size_t index) {
+    Task **task_ptr = ssv_get(list, index);
+    if (!task_ptr) return NULL;
+
+    bool success = ssv_delete_at(list, index);
+    if (!success) return NULL;
+
+    return *task_ptr;
 }
 
 TaskList* tasklist_from_file(char *filename) {
@@ -149,7 +178,7 @@ TaskList* tasklist_from_file(char *filename) {
         }
         current_task.burst = atol(token);
 
-        tasklist_push(list, &current_task);
+        tasklist_push(list, &current_task, true);
     }
 
     fclose(fp);
@@ -161,13 +190,20 @@ TaskList* tasklist_from_file(char *filename) {
 size_t task_process_arrival(TaskList *list, TaskList *queue, long cpu_clock) {
     Task *array = list->array;
     Task *cur_task;
+    Task *pop_task;
     size_t counter = 0;
 
     for (size_t i = 0; i < list->size; i++) {
         cur_task = tasklist_get(list, i);
+
         if (cur_task && cur_task->arrival <= cpu_clock) {
-            tasklist_push(queue, cur_task);
-            counter++;
+
+            pop_task = tasklist_pop_at(list, i);
+
+            if (pop_task) {
+                tasklist_push(queue, pop_task, false);
+                counter++;
+            }
         }
     }
 

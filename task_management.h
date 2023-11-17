@@ -10,6 +10,11 @@ typedef struct {
     char* taskname;
     long arrival;
     long burst;
+
+    /* The following are required for the simulation. */
+    long remaining_burst;
+    long last_execution;
+    long wait_time;
 } Task;
 
 typedef ss_Vector TaskList;
@@ -44,9 +49,21 @@ TaskList* tasklist_create();
 void tasklist_destory(TaskList *list);
 
 /**
- * Push a copy of a task onto the list.
+ * Get the size of the task list.
  */
-bool tasklist_push(TaskList *list, Task *task);
+size_t tasklist_size(TaskList *list);
+
+/**
+ * Check if the task list if empty.
+ */
+bool tasklist_empty(TaskList *list);
+
+/**
+ * Push a copy of a task onto the list.
+ * If copy is true, a copy of the task is made,
+ * else the provided task is used.
+ */
+bool tasklist_push(TaskList *list, Task *task, bool copy);
 
 /**
  * Get the task at the front of the list.
@@ -65,6 +82,13 @@ Task* tasklist_get(TaskList *list, size_t index);
  * Returns true if successful, else false.
  */
 bool tasklist_delete_at(TaskList *list, size_t index);
+
+/**
+ * Pop a task at the specified index and return it.
+ * Returns a pointer to the popped task. Task exists
+ * on heap but not in list.
+ */
+Task* tasklist_pop_at(TaskList *list, size_t index);
 
 /**
  * Read tasklist from a given file.

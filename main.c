@@ -25,16 +25,40 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    /* TaskList *queue = tasklist_create(); */
+    TaskList *queue = tasklist_create();
+    TaskList *completed = tasklist_create();
+    Task *running_task = NULL;
+    bool task_scheduled;
 
-    /* long cpu_clock = 0; */
+    /* Count number of context switches. */
+    long context_switch_counter = 0;
+    long cpu_clock = 0;
 
-    /* while (true) { */
-    /*     // Checks to see if task has to be added to queue and adds it. */
-    /*     task_process_arrival(tasklist, queue, cpu_clock); */
+    while (!tasklist_empty(tasklist) || !tasklist_empty(queue) || running_task) {
+        // Moves tasks from tasklist to queue when they arrive.
+        task_process_arrival(tasklist, queue, cpu_clock);
 
-    /*     cpu_clock++; */
-    /* } */
+        task_scheduled = task_schedule(fcfs_scheduler, &running_task, queue);
+
+        if (running_task) {
+
+            // A task switch took place
+            if (task_scheduled) {
+                context_switch_counter++;
+                running_task->wait_time += (
+                    cpu_clock - running_task->last_execution
+                );
+            }
+            running_task->remaining_burst--;
+            running_task->last_execution = cpu_clock;
+            if (running_task->remaining_burst == 0) {
+                tasklist_push(completed, running_task, false);
+                running_task = NULL;
+            }
+        }
+
+        cpu_clock++;
+    }
 
     tasklist_print(tasklist);
     tasklist_destory(tasklist);
