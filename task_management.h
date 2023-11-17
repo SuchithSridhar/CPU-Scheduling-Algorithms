@@ -39,19 +39,49 @@ void task_destroy(Task *task);
 TaskList* tasklist_create();
 
 /**
- * Grow task list when required.
- * Returns true if successful, else false.
- */
-bool tasklist_grow(TaskList *list);
-
-/**
  * Destroy a given tasklist and free all tasks it holds.
  */
 void tasklist_destory(TaskList *list);
 
 /**
+ * Push a copy of a task onto the list.
+ */
+bool tasklist_push(TaskList *list, Task *task);
+
+/**
+ * Get the task at the front of the list.
+ * Returns a pointer to the task as the front of the list.
+ */
+Task* tasklist_peek(TaskList *list);
+
+/**
+ * Get a task at a particular index.
+ * Returns a pointer to the task at that index.
+ */
+Task* tasklist_get(TaskList *list, size_t index);
+
+/**
+ * Delete a task at the specified index. 
+ * Returns true if successful, else false.
+ */
+bool tasklist_delete_at(TaskList *list, size_t index);
+
+/**
  * Read tasklist from a given file.
  */
 TaskList* tasklist_from_file(char *filename);
+
+/**
+ * Print a given task list.
+ */
+void tasklist_print(TaskList *list);
+
+/**
+ * Check if a task needs to be added to the queue
+ * because it has "arrived". If so, add this task
+ * to the queue.
+ * Returns number of tasks added to the queue.
+ */
+size_t task_process_arrival(TaskList *list, TaskList *queue, long cpu_clock);
 
 #endif

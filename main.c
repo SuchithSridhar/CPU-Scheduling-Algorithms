@@ -25,11 +25,19 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    long clock;
+    /* TaskList *queue = tasklist_create(); */
 
-    while (true) {
-        clock++;
-    }
+    /* long cpu_clock = 0; */
+
+    /* while (true) { */
+    /*     // Checks to see if task has to be added to queue and adds it. */
+    /*     task_process_arrival(tasklist, queue, cpu_clock); */
+
+    /*     cpu_clock++; */
+    /* } */
+
+    tasklist_print(tasklist);
+    tasklist_destory(tasklist);
 
     return EXIT_SUCCESS;
 }

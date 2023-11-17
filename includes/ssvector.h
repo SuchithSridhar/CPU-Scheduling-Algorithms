@@ -47,6 +47,13 @@ void* ssv_get(ss_Vector *vec, size_t index);
 bool ssv_push(ss_Vector *vec, void *item);
 
 /**
+ * Get an element from the end of the vector.
+ * @param vec the ss_Vector to operate on.
+ * @return a pointer within the vector to the element if exists, else NULL.
+ */
+void* ssv_peek(ss_Vector *vec);
+
+/**
  * Pop an element from the end of the vector.
  * The returned element needs to be freed.
  * @param vec the ss_Vector to operate on.

@@ -34,36 +34,70 @@ void task_destroy(Task *task) {
 }
 
 TaskList* tasklist_create() {
-    TaskList *list = malloc(sizeof(TaskList));
+    ss_Vector *list = ssv_init(sizeof(Task*));
     if (list == NULL) return NULL;
     
-    list->array = malloc(sizeof(Task) * TASKLIST_INIT_SIZE);
-    if (list->array == NULL) return NULL;
-
-    list->capacity = TASKLIST_INIT_SIZE;
-    list->size = 0;
     return list;
-}
-
-bool tasklist_grow(TaskList *list) {
-    if (list == NULL) return false;
-
-    size_t new_capacity = (TASKLIST_GROW_FACTOR * list->capacity * sizeof(Task));
-    Task *arr = list->array;
-    Task *new = realloc(arr, new_capacity);
-
-    if (new == NULL) return false;
-    list->array = new;
-    list->capacity = new_capacity;
-    return true;
 }
 
 void tasklist_destory(TaskList *list) {
     if (list == NULL) return;
+    Task **array = list->array;
     for (int i = 0; i < list->size; i++) {
-        free(list->array[i].taskname);
+        task_destroy(array[i]);
     }
-    free(list);
+    ssv_destroy(list);
+}
+
+bool tasklist_push(TaskList *list, Task *task) {
+    if (!list || !task) return false;
+
+    Task *t_copy = task_create(task->taskname, task->arrival, task->burst);
+    if (!t_copy) return false;
+
+    bool success = ssv_push(list, &t_copy);
+    if (!success) {
+        task_destroy(t_copy);
+        return false;
+    }
+
+    return true;
+}
+
+void _task_print(void *task) {
+    if (!task) return;
+    Task *t = *((Task **) task);
+    printf("%4s: %7ld, %7ld\n", t->taskname, t->arrival, t->burst);
+}
+
+void tasklist_print(TaskList *list) {
+    if (!list) return;
+    printf("%4s: %7s, %7s\n", "Name", "Arrival", "Burst");
+    ssv_print(list, _task_print);
+}
+
+Task* tasklist_peek(TaskList *list) {
+    Task **task_ptr = ssv_peek(list);
+    if (!task_ptr) return NULL;
+    else return *task_ptr;
+}
+
+Task* tasklist_get(TaskList *list, size_t index) {
+    Task **task_ptr = ssv_get(list, index);
+    if (!task_ptr) return NULL;
+    else return *task_ptr;
+}
+
+bool tasklist_delete_at(TaskList *list, size_t index) {
+    Task **task_ptr = ssv_get(list, index);
+    if (!task_ptr) return false;
+
+    bool success = ssv_delete_at(list, index);
+    if (!success) return false;
+
+    task_destroy(*task_ptr);
+
+    return true;
 }
 
 TaskList* tasklist_from_file(char *filename) {
@@ -74,9 +108,7 @@ TaskList* tasklist_from_file(char *filename) {
     ssize_t read;
     char *token;
 
-    char *taskname;
-    long arrival;
-    long burst;
+    Task current_task;
 
     fp = fopen(filename, "r");
 
@@ -99,7 +131,7 @@ TaskList* tasklist_from_file(char *filename) {
             exit(EXIT_FAILURE);
         }
 
-        taskname = token;
+        current_task.taskname = token;
 
         token = strtok(NULL, ",");
         if (token == NULL) {
@@ -107,7 +139,7 @@ TaskList* tasklist_from_file(char *filename) {
             fprintf(stderr, "Invalid file format.\n");
             exit(EXIT_FAILURE);
         }
-        arrival = atol(token);
+        current_task.arrival = atol(token);
 
         token = strtok(NULL, ",");
         if (token == NULL) {
@@ -115,17 +147,9 @@ TaskList* tasklist_from_file(char *filename) {
             fprintf(stderr, "Invalid file format.\n");
             exit(EXIT_FAILURE);
         }
-        burst = atol(token);
+        current_task.burst = atol(token);
 
-        task_init(list->array + list->size, taskname, arrival, burst);
-        list->size++;
-        if (list->size == list->capacity) {
-            bool success = tasklist_grow(list);
-            if (!success) {
-                tasklist_destory(list);
-                return NULL;
-            }
-        }
+        tasklist_push(list, &current_task);
     }
 
     fclose(fp);
@@ -134,3 +158,18 @@ TaskList* tasklist_from_file(char *filename) {
     return list;
 }
 
+size_t task_process_arrival(TaskList *list, TaskList *queue, long cpu_clock) {
+    Task *array = list->array;
+    Task *cur_task;
+    size_t counter = 0;
+
+    for (size_t i = 0; i < list->size; i++) {
+        cur_task = tasklist_get(list, i);
+        if (cur_task && cur_task->arrival <= cpu_clock) {
+            tasklist_push(queue, cur_task);
+            counter++;
+        }
+    }
+
+    return counter;
+}
