@@ -6,33 +6,62 @@
 #include <string.h>
 #include "task_management.h"
 
-void _task_print(void *task) {
-    if (!task) return;
-    Task *t = *((Task **) task);
+void _task_print(void *task_ptr) {
+    if (!task_ptr) return;
+    Task *t = *((Task **) task_ptr);
     if (!t) return;
     printf("%4s: %7ld, %7ld\n", t->taskname, t->arrival, t->burst);
 }
 
-void _task_print_verbose(void *task) {
-    if (!task) return;
-    Task *t = *((Task **) task);
+void _task_print_verbose(void *task_ptr) {
+    if (!task_ptr) return;
+    Task *t = *((Task **) task_ptr);
     if (!t) return;
-    printf("Task %s\n", t->taskname);
+    printf("Task %s (%ld) \n", t->taskname, t->id);
     printf("Arrival: %ld, Burst: %ld\n", t->arrival, t->burst);
     printf("Waiting Time: %ld\n\n", t->wait_time);
 }
 
-bool fcfs_scheduler(Task **running_task, TaskList *queue) {
+bool fcfs_scheduler(SchedulerArgs *args, long cpu_tick) {
     // False if pointer is null or task already running.
-    if (!running_task || (*running_task)) return false;
+    if (!args || args->running_task) return false;
 
-    *running_task = tasklist_pop_at(queue, 0);
-    if (*running_task) return true;
-    else return false;
+    if (tasklist_empty(args->queue)) return false;
+
+    args->running_task = tasklist_pop_at(args->queue, 0);
+    return args->running_task != NULL;
 }
 
-bool task_schedule(SchedulerFunction scheduler, Task **run, TaskList *queue) {
-    return scheduler(run, queue);
+bool rr_scheduler(SchedulerArgs *args, long cpu_tick) {
+    if (!args) return false;
+
+    if (tasklist_empty(args->queue)) return false;
+
+    if (!args->running_task) {
+        // No currently running task
+        args->running_task = tasklist_pop_at(args->queue, 0);
+
+        if (!args->running_task) return false;
+
+        args->task_start = cpu_tick;
+        return true;
+
+    } 
+
+    if (cpu_tick - args->task_start == RR_TIME_SHARE) {
+        // Time share complete and queue not empty
+        Task *task = tasklist_pop_at(args->queue, 0);
+        tasklist_push(args->queue, args->running_task, false);
+        args->running_task = task;
+        args->task_start = cpu_tick;
+        return true;
+    }
+
+    return false;
+}
+
+bool task_schedule(SchedulerFunction scheduler, SchedulerArgs *args, long cpu_tick) {
+    return scheduler(args, cpu_tick);
 }
 
 int main(int argc, char *argv[]) {
@@ -55,41 +84,51 @@ int main(int argc, char *argv[]) {
 
     TaskList *queue = tasklist_create();
     TaskList *completed = tasklist_create();
-    Task *running_task = NULL;
     bool task_scheduled;
 
     /* Count number of context switches. */
     long context_switch_counter = 0;
     long cpu_clock = 0;
 
-    while (!tasklist_empty(tasklist) || !tasklist_empty(queue) || running_task) {
+    SchedulerArgs *sargs = malloc(sizeof(SchedulerArgs));
+    sargs->running_task = NULL;
+    sargs->queue = queue;
+    sargs->task_start = 0;
+
+    while (!tasklist_empty(tasklist) || !tasklist_empty(queue) || sargs->running_task) {
         // Moves tasks from tasklist to queue when they arrive.
 
         task_process_arrival(tasklist, queue, cpu_clock);
 
-        task_scheduled = task_schedule(fcfs_scheduler, &running_task, queue);
+        task_scheduled = task_schedule(rr_scheduler, sargs, cpu_clock);
 
-        if (running_task) {
+        if (sargs->running_task) {
+
             // A task switch took place
             if (task_scheduled) {
+                printf("Switch to %ld at %ld.\n", sargs->running_task->id, cpu_clock);
                 context_switch_counter++;
-                running_task->wait_time += (
-                    cpu_clock - running_task->last_execution
+                sargs->running_task->wait_time += (
+                    cpu_clock - sargs->running_task->last_execution - 1
                 );
             }
-            running_task->remaining_burst--;
-            running_task->last_execution = cpu_clock;
-            if (running_task->remaining_burst == 0) {
-                tasklist_push(completed, running_task, false);
-                running_task = NULL;
+            sargs->running_task->remaining_burst--;
+            sargs->running_task->last_execution = cpu_clock;
+            if (sargs->running_task->remaining_burst == 0) {
+                tasklist_push(completed, sargs->running_task, false);
+                sargs->running_task = NULL;
             }
         }
 
         cpu_clock++;
     }
 
+    tasklist_sort(completed, tasklist_compare_id);
     tasklist_print(completed, _task_print_verbose);
     tasklist_destory(tasklist);
+    tasklist_destory(completed);
+    tasklist_destory(queue);
+    free(sargs);
 
     return EXIT_SUCCESS;
 }

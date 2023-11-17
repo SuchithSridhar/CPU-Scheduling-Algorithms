@@ -7,6 +7,7 @@
 #include "includes/ssvector.h"
 
 typedef struct {
+    size_t id;
     char* taskname;
     long arrival;
     long burst;
@@ -23,13 +24,13 @@ typedef ss_Vector TaskList;
  * Initialize a task with the given parameters while copying the
  * taskname string to the given task using strdup.
  */
-bool task_init(Task *task, char *taskname, long arrival, long burst);
+bool task_init(Task *task, size_t id, char *taskname, long arrival, long burst);
 
 /**
  * Create and initialize a task on the heap and return
  * a pointer to it.
  */
-Task* task_create(char *taskname, long arrival, long burst);
+Task* task_create(size_t id, char *taskname, long arrival, long burst);
 
 /**
  * Destroy a task cleanly.
@@ -89,6 +90,13 @@ bool tasklist_delete_at(TaskList *list, size_t index);
  * on heap but not in list.
  */
 Task* tasklist_pop_at(TaskList *list, size_t index);
+
+int tasklist_compare_id(const void *task_1, const void *task_2);
+int tasklist_compare_burst(const void *task_1, const void *task_2);
+int tasklist_compare_arrival(const void *task_1, const void *task_2);
+int tasklist_compare_remaining_burst(const void *task_1, const void *task_2);
+
+bool tasklist_sort(TaskList *list, int (*compare)(const void*, const void*));
 
 /**
  * Read tasklist from a given file.

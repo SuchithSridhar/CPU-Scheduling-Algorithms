@@ -4,24 +4,27 @@
 #include <string.h>
 #include "includes/ssvector.h"
 
-bool task_init(Task *task, char *taskname, long arrival, long burst) {
+bool task_init(Task *task, size_t id, char *taskname, long arrival, long burst) {
     if (task == NULL) false;
 
     task->taskname = strdup(taskname);
+    if (!task->taskname) return false;
+
+    task->id = id;
     task->arrival = arrival;
     task->burst = burst;
     task->remaining_burst = burst;
-    task->last_execution = arrival;
+    task->last_execution = arrival - 1;
     task->wait_time = 0;
 
     return true;
 }
 
-Task* task_create(char *taskname, long arrival, long burst) {
+Task* task_create(size_t id, char *taskname, long arrival, long burst) {
     Task *task = malloc(sizeof(Task));
     if (task == NULL) return NULL;
 
-    bool success = task_init(task, taskname, arrival, burst);
+    bool success = task_init(task, id, taskname, arrival, burst);
     if (!success) {
         free(task);
         return NULL;
@@ -68,7 +71,7 @@ bool tasklist_push(TaskList *list, Task *task, bool copy) {
     Task *t;
 
     if (copy) {
-        t = task_create(task->taskname, task->arrival, task->burst);
+        t = task_create(task->id, task->taskname, task->arrival, task->burst);
         if (!t) return false;
     } else {
         t = task;
@@ -124,6 +127,37 @@ Task* tasklist_pop_at(TaskList *list, size_t index) {
     return ret_task;
 }
 
+int tasklist_compare_id(const void *task_1, const void *task_2) {
+    long l = (*(Task**)task_1)->id;
+    long r = (*(Task**)task_2)->id;
+    return (l - r);
+}
+
+int tasklist_compare_burst(const void *task_1, const void *task_2) {
+    long l = (*(Task**)task_1)->burst;
+    long r = (*(Task**)task_2)->burst;
+    return (l - r);
+}
+
+int tasklist_compare_arrival(const void *task_1, const void *task_2) {
+    long l = (*(Task**)task_1)->arrival;
+    long r = (*(Task**)task_2)->arrival;
+    return (l - r);
+}
+
+int tasklist_compare_remaining_burst(const void *task_1, const void *task_2) {
+    long l = (*(Task**)task_1)->remaining_burst;
+    long r = (*(Task**)task_2)->remaining_burst;
+    return (l - r);
+}
+
+bool tasklist_sort(TaskList *list, int (*compare)(const void*, const void*)) {
+    if (!list || !compare) return false;
+
+    qsort(list->array, list->size, sizeof(Task*), compare);
+    return true;
+}
+
 TaskList* tasklist_from_file(char *filename) {
 
     FILE *fp;
@@ -147,6 +181,7 @@ TaskList* tasklist_from_file(char *filename) {
         return NULL;
     }
 
+    current_task.id = 1;
     while ((read = getline(&line, &len, fp)) != -1) {
         token = strtok(line, ",");
         if (token == NULL) {
@@ -174,6 +209,7 @@ TaskList* tasklist_from_file(char *filename) {
         current_task.burst = atol(token);
 
         tasklist_push(list, &current_task, true);
+        current_task.id++;
     }
 
     fclose(fp);
