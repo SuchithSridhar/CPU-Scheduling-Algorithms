@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stddef.h>
+#include <sys/types.h>
 #include "lib/ssvector.h"
 
 bool task_init(Task *task, size_t id, char *taskname, long arrival, long burst) {
