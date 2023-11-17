@@ -97,8 +97,9 @@ TaskList* tasklist_from_file(char *filename);
 
 /**
  * Print a given task list.
+ * the print function is called on each element.
  */
-void tasklist_print(TaskList *list);
+void tasklist_print(TaskList *list, void (*print)(void*));
 
 /**
  * Check if a task needs to be added to the queue

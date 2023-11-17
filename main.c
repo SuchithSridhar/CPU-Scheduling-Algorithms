@@ -6,6 +6,34 @@
 #include <string.h>
 #include "task_management.h"
 
+void _task_print(void *task) {
+    if (!task) return;
+    Task *t = *((Task **) task);
+    if (!t) return;
+    printf("%4s: %7ld, %7ld\n", t->taskname, t->arrival, t->burst);
+}
+
+void _task_print_verbose(void *task) {
+    if (!task) return;
+    Task *t = *((Task **) task);
+    if (!t) return;
+    printf("Task %s\n", t->taskname);
+    printf("Arrival: %ld, Burst: %ld\n", t->arrival, t->burst);
+    printf("Waiting Time: %ld\n\n", t->wait_time);
+}
+
+bool fcfs_scheduler(Task **running_task, TaskList *queue) {
+    // False if pointer is null or task already running.
+    if (!running_task || (*running_task)) return false;
+
+    *running_task = tasklist_pop_at(queue, 0);
+    if (*running_task) return true;
+    else return false;
+}
+
+bool task_schedule(SchedulerFunction scheduler, Task **run, TaskList *queue) {
+    return scheduler(run, queue);
+}
 
 int main(int argc, char *argv[]) {
 
@@ -36,12 +64,12 @@ int main(int argc, char *argv[]) {
 
     while (!tasklist_empty(tasklist) || !tasklist_empty(queue) || running_task) {
         // Moves tasks from tasklist to queue when they arrive.
+
         task_process_arrival(tasklist, queue, cpu_clock);
 
         task_scheduled = task_schedule(fcfs_scheduler, &running_task, queue);
 
         if (running_task) {
-
             // A task switch took place
             if (task_scheduled) {
                 context_switch_counter++;
@@ -60,7 +88,7 @@ int main(int argc, char *argv[]) {
         cpu_clock++;
     }
 
-    tasklist_print(tasklist);
+    tasklist_print(completed, _task_print_verbose);
     tasklist_destory(tasklist);
 
     return EXIT_SUCCESS;

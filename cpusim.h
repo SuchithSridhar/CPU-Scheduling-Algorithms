@@ -6,8 +6,8 @@
 
 typedef bool (*SchedulerFunction) (Task **running, TaskList *queue);
 
-bool task_schedule(SchedulerFunction scheduler, Task **runnning, TaskList *queue);
+bool task_schedule(SchedulerFunction scheduler, Task **run, TaskList *queue);
 
-bool fcfs_scheduler(Task **running, TaskList *queue);
+bool fcfs_scheduler(Task **running_task, TaskList *queue);
  
 #endif

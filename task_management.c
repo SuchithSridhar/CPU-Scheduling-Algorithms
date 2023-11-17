@@ -11,7 +11,7 @@ bool task_init(Task *task, char *taskname, long arrival, long burst) {
     task->arrival = arrival;
     task->burst = burst;
     task->remaining_burst = burst;
-    task->last_execution = 0;
+    task->last_execution = arrival;
     task->wait_time = 0;
 
     return true;
@@ -83,16 +83,9 @@ bool tasklist_push(TaskList *list, Task *task, bool copy) {
     return true;
 }
 
-void _task_print(void *task) {
-    if (!task) return;
-    Task *t = *((Task **) task);
-    printf("%4s: %7ld, %7ld\n", t->taskname, t->arrival, t->burst);
-}
-
-void tasklist_print(TaskList *list) {
+void tasklist_print(TaskList *list, void (*print)(void*)) {
     if (!list) return;
-    printf("%4s: %7s, %7s\n", "Name", "Arrival", "Burst");
-    ssv_print(list, _task_print);
+    ssv_print(list, print);
 }
 
 Task* tasklist_peek(TaskList *list) {
@@ -123,10 +116,12 @@ Task* tasklist_pop_at(TaskList *list, size_t index) {
     Task **task_ptr = ssv_get(list, index);
     if (!task_ptr) return NULL;
 
+    Task *ret_task = *task_ptr;
+
     bool success = ssv_delete_at(list, index);
     if (!success) return NULL;
 
-    return *task_ptr;
+    return ret_task;
 }
 
 TaskList* tasklist_from_file(char *filename) {
@@ -188,7 +183,6 @@ TaskList* tasklist_from_file(char *filename) {
 }
 
 size_t task_process_arrival(TaskList *list, TaskList *queue, long cpu_clock) {
-    Task *array = list->array;
     Task *cur_task;
     Task *pop_task;
     size_t counter = 0;
@@ -197,7 +191,6 @@ size_t task_process_arrival(TaskList *list, TaskList *queue, long cpu_clock) {
         cur_task = tasklist_get(list, i);
 
         if (cur_task && cur_task->arrival <= cpu_clock) {
-
             pop_task = tasklist_pop_at(list, i);
 
             if (pop_task) {
