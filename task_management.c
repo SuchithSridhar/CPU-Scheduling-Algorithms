@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "includes/ssvector.h"
+#include "lib/ssvector.h"
 
 bool task_init(Task *task, size_t id, char *taskname, long arrival, long burst) {
     if (task == NULL) false;
@@ -127,6 +127,20 @@ Task* tasklist_pop_at(TaskList *list, size_t index) {
     return ret_task;
 }
 
+TaskList* tasklist_deep_copy(TaskList *list) {
+    if (!list) return NULL;
+
+    TaskList *copy = tasklist_create();
+    if (!copy) return NULL;
+
+    Task **array = list->array;
+    for (size_t i = 0; i < list->size; i++) {
+        tasklist_push(copy, array[i], true);
+    }
+    return copy;
+}
+
+
 int tasklist_compare_id(const void *task_1, const void *task_2) {
     long l = (*(Task**)task_1)->id;
     long r = (*(Task**)task_2)->id;
@@ -158,9 +172,10 @@ bool tasklist_sort(TaskList *list, int (*compare)(const void*, const void*)) {
     return true;
 }
 
-TaskList* tasklist_from_file(char *filename) {
+TaskList* tasklist_from_file(FILE *file) {
 
-    FILE *fp;
+    if (!file) return NULL;
+
     char *line = NULL;
     size_t len = 0;
     ssize_t read;
@@ -168,21 +183,13 @@ TaskList* tasklist_from_file(char *filename) {
 
     Task current_task;
 
-    fp = fopen(filename, "r");
-
-    if (fp == NULL) {
-        fprintf(stderr, "Unable to find specified file: %s\n", filename);
-        exit(EXIT_FAILURE);
-    }
-
     TaskList *list = tasklist_create();
     if (list == NULL) {
-        fclose(fp);
         return NULL;
     }
 
     current_task.id = 1;
-    while ((read = getline(&line, &len, fp)) != -1) {
+    while ((read = getline(&line, &len, file)) != -1) {
         token = strtok(line, ",");
         if (token == NULL) {
             tasklist_destory(list);
@@ -212,7 +219,6 @@ TaskList* tasklist_from_file(char *filename) {
         current_task.id++;
     }
 
-    fclose(fp);
     if (line) free(line);
 
     return list;

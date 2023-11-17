@@ -3,8 +3,9 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 
-#include "includes/ssvector.h"
+#include "lib/ssvector.h"
 
 typedef struct {
     size_t id;
@@ -91,6 +92,12 @@ bool tasklist_delete_at(TaskList *list, size_t index);
  */
 Task* tasklist_pop_at(TaskList *list, size_t index);
 
+/**
+ * Create a deep copy of a given task list
+ * and return a pointer to the copy.
+ */
+TaskList* tasklist_deep_copy(TaskList *list);
+
 int tasklist_compare_id(const void *task_1, const void *task_2);
 int tasklist_compare_burst(const void *task_1, const void *task_2);
 int tasklist_compare_arrival(const void *task_1, const void *task_2);
@@ -101,7 +108,7 @@ bool tasklist_sort(TaskList *list, int (*compare)(const void*, const void*));
 /**
  * Read tasklist from a given file.
  */
-TaskList* tasklist_from_file(char *filename);
+TaskList* tasklist_from_file(FILE *file);
 
 /**
  * Print a given task list.

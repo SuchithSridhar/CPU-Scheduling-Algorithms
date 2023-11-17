@@ -15,8 +15,8 @@ class Task:
 def genTasks(count: int) -> list[Task]:
     cur_arrival = 0
     tasks: list[Task] = []
-    arrival_buffer = 10
-    burst_range = 20
+    arrival_buffer = randint(20, 40)
+    burst_range = randint(20, 50)
 
     for i in range(1, count+1):
         arrival = randint(cur_arrival, cur_arrival + arrival_buffer)

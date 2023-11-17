@@ -3,16 +3,10 @@
 
 #include <stdbool.h>
 #include "task_management.h"
+#include "schedulers.h"
 
-#define RR_TIME_SHARE 4
-
-typedef struct {
-    Task *running_task;
-    TaskList *queue;
-    long task_start;
-} SchedulerArgs;
-
-typedef bool (*SchedulerFunction) (SchedulerArgs *args, long cpu_tick);
+#define DEFAULT_OUTPUT_FILE "Output.txt"
+#define DEFAULT_INPUT_FILE "TaskSpec.txt"
 
 /**
  * Schedule a task using the provided scheduler.
@@ -21,23 +15,8 @@ typedef bool (*SchedulerFunction) (SchedulerArgs *args, long cpu_tick);
 bool task_schedule(SchedulerFunction scheduler, SchedulerArgs *args, long cpu_tick);
 
 /**
- * First-come first-served task scheduler.
+ * Simulate a given scheduler with a given tasklist.
  */
-bool fcfs_scheduler(SchedulerArgs *args, long cpu_tick);
-
-/**
- * Round-Robin task scheduler.
- */
-bool rr_scheduler(SchedulerArgs *args, long cpu_tick);
-
-/**
- * Non-preemptive shortest-job-first task scheduler.
- */
-bool nsjf_scheduler(SchedulerArgs *args, long cpu_tick);
-
-/**
- * Preemptive shortest-job-first task scheduler.
- */
-bool psjf_scheduler(SchedulerArgs *args, long cpu_tick);
+void simulate_scheduler(SchedulerFunction scheduler, TaskList *list);
  
 #endif
