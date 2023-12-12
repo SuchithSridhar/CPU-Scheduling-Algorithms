@@ -1,5 +1,15 @@
+# Ignore all
 *
-!Makefile
+
+# Unignore all with extensions
 !*.*
+
+# Unignore all dirs
 !*/
-*.o
+
+# Unignore any Makefiles
+
+!Makefile
+
+# Ignore pdf file
+CSCI3120-ASN4-Description.pdf
