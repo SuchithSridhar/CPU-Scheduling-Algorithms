@@ -21,7 +21,7 @@ main: $(HEADERS) $(SRCS) $(VEC_LIB).o
 
 # Compile for gdb
 debug: $(HEADERS) $(SRCS) $(VEC_LIB).o
-	$(CC) -o $(TARGET) --std=$(CSTD) -g $(SRCS) $(VEC_LIB).o
+	$(CC) -o $(TARGET) -g $(SRCS) $(VEC_LIB).o
 
 run:
 	./$(TARGET)
