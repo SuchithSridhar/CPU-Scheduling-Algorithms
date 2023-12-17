@@ -231,7 +231,8 @@ size_t task_process_arrival(TaskList *list, TaskList *queue, long cpu_clock) {
     Task *pop_task;
     size_t counter = 0;
 
-    for (size_t i = 0; i < list->size; i++) {
+    int i = 0;
+    while (i < list->size) {
         cur_task = tasklist_get(list, i);
 
         if (cur_task && cur_task->arrival <= cpu_clock) {
@@ -240,8 +241,14 @@ size_t task_process_arrival(TaskList *list, TaskList *queue, long cpu_clock) {
             if (pop_task) {
                 tasklist_push(queue, pop_task, false);
                 counter++;
+
+                // i not incremented since new task
+                // at current index due to "pop".
+                continue;
             }
         }
+
+        i++;
     }
 
     return counter;
